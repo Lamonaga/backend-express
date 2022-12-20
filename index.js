@@ -1,6 +1,7 @@
 import express from "express";
-import mongoose, { get } from "mongoose";
-import Todo from "./Todo.js";
+import mongoose from "mongoose";
+
+import router from "./router.js";
 
 const PORT = 5000;
 
@@ -8,30 +9,7 @@ const DB_URL = `mongodb://root:rootpassword@localhost:27017/`;
 const app = express();
 
 app.use(express.json());
-
-app.post("/", async (req, res) => {
-  try {
-    const { title, completed } = req.body;
-    const todo = await Todo.create({ title, completed });
-    res.status(200).json(todo);
-  } catch (e) {
-    console.log("Error post :>> ", e);
-  }
-});
-
-app.get("/todos", async (req, res) => {
-  try {
-    Todo.find({}, (err, todos) => {
-      if (err) {
-        console.log("err :>> ", err);
-      } else {
-        res.json(todos);
-      }
-    });
-  } catch (e) {
-    console.log("Error get :>> ", e);
-  }
-});
+app.use("/api", router);
 
 async function startApp() {
   try {
